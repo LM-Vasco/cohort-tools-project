@@ -45,7 +45,7 @@ eg. our React app running at ``localhost:5173`` (?)
 
 1. install the CORS package
 
-    in the project directory, open a terminal:
+    in the project's server directory, open a terminal:
     <br>``npm install cors``
 
 2. import the CORS middleware
@@ -90,7 +90,7 @@ Your Express server should now respond to preflight requests with the following 
 <br>``Access-Control-Allow-Origin``
 
 ## Note
-Be sure to set your CORS middleware before any ``route`` or ``rotuer`` definition to be certain it functions properly.
+Be sure to set your CORS middleware before any ``route`` or ``router`` definition to be certain it functions properly.
 
 Recommendation:
 Place CORS as the <i>first</i> middleware immediately after instantiating the server: ``const app = express()``
