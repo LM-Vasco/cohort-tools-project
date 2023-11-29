@@ -35,7 +35,7 @@ const bookSchema = new Schema({
 });
 ```
 Note:
-<br>- The ``author`` field of the initial ``bookSchema`` was ``type: String``, but it has been updated as in the code block above.
+<br>- The ``author`` field of the initial ``bookSchema`` was ``author: String``, but it has been updated as in the code block above.
 <br>- This allows us to store the ``_id`` of a document from another collection.
 <br>- The ``ref`` option specifies the model/collection where the document associated with the ``_id`` is stored.
 <br>- Be certain that the model name in ``ref`` is the same as the name string used to create the model.
