@@ -47,7 +47,7 @@ app.get("/api/cohorts", (req, res) => {
         });
 });
 
-app.get("/api/cohort/:cohortId", (req, res, next) => {
+app.get("/api/cohorts/:cohortId", (req, res, next) => {
     const cohortId = req.params.cohortId;
     Cohort.findById(cohortId)
         .then((cohort) => {
