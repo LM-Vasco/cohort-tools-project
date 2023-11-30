@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const Cohort = require("./models/Cohort.model");
 const Student = require("./models/Student.model");
 const cors = require("cors");
+const { errorHandler, notFoundHandler } = require("./middleware/error-handling");
 const PORT = 5005;
 
 // STATIC DATA
@@ -42,8 +43,8 @@ app.get("/api/cohorts", (req, res) => {
             res.json(cohorts);
         })
         .catch((error) => {
-            console.error("Error while retrieving cohorts ->", error);
-            res.status(500).send({ error: "Failed to retrieve cohorts" });
+            console.log("Unable to get cohorts -> " + err);
+            next({...err, message: "Unable to get cohorts"});
         });
 });
 
@@ -54,8 +55,8 @@ app.get("/api/cohorts/:cohortId", (req, res, next) => {
             res.status(200).json(cohort);
         })
         .catch((err) => {
-            console.log("trouble: " + err);
-            res.status(500).json({ message: "Unable to get cohort" });
+            console.log("Unable to get cohort -> " + err);
+            next({...err, message: "Unable to get cohort"});
         });
 });
 
@@ -80,8 +81,8 @@ app.post("/api/cohorts", (req, res, next) => {
             res.status(201).json(cohort);
         })
         .catch((err) => {
-            console.log("Failed to create cohort: " + err);
-            res.status(500).json("Failed to create cohort");
+            console.log("Failed to create cohort -> " + err);
+            next({...err, message: "Failed to create cohort"});
         });
 });
 
@@ -108,8 +109,8 @@ app.put("/api/cohorts/:cohortId", (req, res, next) => {
             res.status(201).json(cohort);
         })
         .catch((err) => {
-            console.log("Failed to update cohort: " + err);
-            res.status(500).json("Failed to update cohort");
+            console.log("Failed to update cohort -> " + err);
+            next({...err, message: "Failed to update cohort"});
         });
 });
 
@@ -120,8 +121,8 @@ app.delete("/api/cohorts/:cohortId", (req, res, next) => {
             res.status(204).send();
         })
         .catch((err) => {
-            console.log("Failed to delete cohort: " + err);
-            res.status(500).json("Failed to delete cohort");
+            console.log("Failed to delete cohort -> " + err);
+            next({...err, message: "Failed to delete cohort"});
         });
 });
 
@@ -131,9 +132,9 @@ app.get("/api/students", (req, res) => {
         .then((students) => {
             res.json(students);
         })
-        .catch((error) => {
-            console.error("Error while retrieving students ->", error);
-            res.status(500).send({ message: "Failed to retrieve students" });
+        .catch((err) => {
+            console.error("Unable to retrieve students -> ", err);
+            next({...err, message: "Unable to retrieve students"});
         });
 });
 
@@ -145,8 +146,8 @@ app.get("/api/students/:studentId", (req, res, next) => {
             res.status(200).json(student);
         })
         .catch((err) => {
-            console.log("error:" + err);
-            res.status(500).json({ message: "Unable to retrieve student" });
+            console.log("Unable to retrieve student -> " + err);
+            next({...err, message: "Unable to retrieve student"});
         });
 });
 
@@ -159,8 +160,8 @@ app.get("/api/students/cohort/:cohortId", (req, res, next) => {
             res.status(200).json(student);
         })
         .catch((err) => {
-            console.log("error:" + err);
-            res.status(500).json({ message: "Unable to retrieve student" });
+            console.log("Unable to retrieve students in specified cohort -> " + err);
+            next({...err, message: "Unable to retrieve students in specified cohort"});
         });
 });
 
@@ -185,8 +186,8 @@ app.post("/api/students", (req, res, next) => {
             res.status(201).json(student);
         })
         .catch((err) => {
-            console.log("Failed to create student: " + err);
-            res.status(500).json("Failed to create student");
+            console.log("Failed to create student -> " + err);
+            next({...err, message: "Failed to create student"});
         });
 });
 
@@ -206,7 +207,7 @@ app.put("/api/students/:studentId", (req, res, next) => {
         background,
         image,
         cohort,
-        projects,
+        projects
     };
 
     Student.findByIdAndUpdate(studentId, newStudent, { new: true })
@@ -214,8 +215,8 @@ app.put("/api/students/:studentId", (req, res, next) => {
             res.status(200).json(student);
         })
         .catch((err) => {
-            console.log("Failed to update student: " + err);
-            res.status(500).json("Failed to update student");
+            console.log("Failed to update student -> " + err);
+            next({...err, message: "Failed to update student"});
         });
 });
 
@@ -226,10 +227,13 @@ app.delete("/api/students/:studentId", (req, res, next) => {
             res.status(204).send();
         })
         .catch((err) => {
-            console.log("Failed to delete student: " + err);
-            res.status(500).json("Failed to delete student");
+            console.log("Failed to delete student -> " + err);
+            next({...err, message: "Failed to delete student"});
         });
 });
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 // START SERVER
 app.listen(PORT, () => {
