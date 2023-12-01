@@ -6,6 +6,7 @@ const Cohort = require("./models/Cohort.model");
 const Student = require("./models/Student.model");
 const cors = require("cors");
 const { errorHandler, notFoundHandler } = require("./middleware/error-handling");
+const { isAuthenticated } = require("./middleware/authentication");
 const PORT = 5005;
 
 // STATIC DATA
@@ -231,6 +232,9 @@ app.delete("/api/students/:studentId", (req, res, next) => {
             next({...err, message: "Failed to delete student"});
         });
 });
+
+app.use("/api/user/:id", isAuthenticated)
+app.use('/auth', require('./routes/auth.routes'))
 
 app.use(notFoundHandler);
 app.use(errorHandler);
